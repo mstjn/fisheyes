@@ -7,3 +7,12 @@
 body {
     padding: 40px 100px 40px 100px;
 }
+
+h2 {
+    font-size: 36px;
+    color: #D3573C;
+}
+h3 {
+font-size: 13px;
+color: var(--main-color);
+}
