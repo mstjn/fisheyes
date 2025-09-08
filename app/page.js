@@ -9,8 +9,10 @@ export default async function Page() {
   return (
     <>
       <Banner />
-      <main>
-        <PhotographerCard />
+      <main className="flex flex-wrap justify-between gap-y-15">
+        {allPhotographers.map((photographer) => (
+            <PhotographerCard key={photographer.id} photographer={photographer} />
+        ))}
       </main>
     </>
   );

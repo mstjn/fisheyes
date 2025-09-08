@@ -4,15 +4,16 @@
     --main-color: #901C1C
 }
 
-body {
+header {
     padding: 40px 100px 40px 100px;
+    margin-bottom: 30px;
 }
 
 h2 {
-    font-size: 36px;
+    font-size: 2em;
     color: #D3573C;
 }
 h3 {
-font-size: 13px;
+font-size: 1em;
 color: var(--main-color);
 }
