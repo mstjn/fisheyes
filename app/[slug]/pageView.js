@@ -16,18 +16,27 @@ const PageView = ({ photographer, medias }) => {
             </h3>
             <p className="text-lg text-[#525252]">{photographer.tagline}</p>
           </article>
-          <button className="h-16 p-2.5 bg-[var(--main-color)] rounded-md text-white text-lg font-bold hover:bg-[#DB8876] hover:text-black">Contactez-moi</button>
+          <button className="h-16 p-2.5 bg-[var(--main-color)] rounded-md text-white text-lg font-bold hover:bg-[#DB8876] hover:text-black">
+            Contactez-moi
+          </button>
           <div className="relative rounded-full h-52 w-52 overflow-hidden">
             <Image src={`/${photographer.portrait}`} fill alt="" className="object-cover overflow-visible" />
           </div>
         </section>
-       <section className="flex gap-12 mb-5 mt-5">
-        <h3 className="font-bold text-lg">Trier par</h3>
-        <div className="bg-[var(--main-color)] flex justify-around w-44 text-lg text-white font-bold rounded-md p-2.5">
-            <h3>Popularité</h3>
-            <Image src="/dropdown.svg" width={15} height={15} alt=""/>
-        </div>
-       </section>
+        <section className="flex gap-12 mb-5 mt-5">
+          <h3 className="font-bold text-lg">Trier par</h3>
+          <div
+            className="bg-[var(--main-color)] text-lg text-white font-bold rounded-md p-5 shadow-xl/30"
+          >
+            <div className="bg-[var(--main-color)] flex w-44 text-lg text-white font-bold rounded-md">
+              <h3 className="w-full pb-3">Popularité</h3>
+              <Image src="/dropdown-bottom.svg" width={15} height={15} alt="" className="pb-3"/>
+            </div>
+            <h3 className="pb-3 pt-3 border-b-1 w-full border-t-1">Date</h3>
+            <h3 className="pt-3">Titre</h3>
+          </div>
+        </section>
+
         <section className="flex flex-wrap justify-between">
           {medias.map((project, index) => {
             const col = index % 3;
