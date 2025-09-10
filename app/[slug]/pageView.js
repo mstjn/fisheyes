@@ -16,21 +16,18 @@ const PageView = ({ photographer, medias }) => {
             </h3>
             <p className="text-lg text-[#525252]">{photographer.tagline}</p>
           </article>
-          <button className="h-16 p-2.5 bg-[var(--main-color)] rounded-sm text-white text-xl font-bold">Contactez-moi</button>
+          <button className="h-16 p-2.5 bg-[var(--main-color)] rounded-md text-white text-lg font-bold hover:bg-[#DB8876] hover:text-black">Contactez-moi</button>
           <div className="relative rounded-full h-52 w-52 overflow-hidden">
             <Image src={`/${photographer.portrait}`} fill alt="" className="object-cover overflow-visible" />
           </div>
         </section>
-        <section className="flex gap-10 mt-5">
-          <h3 className="font-bold text-lg">Trier par</h3>
-          <nav>
-            <ul>
-              <li>Popularité</li>
-              <li>Date</li>
-              <li>Titre</li>
-            </ul>
-          </nav>
-        </section>
+       <section className="flex gap-12 mb-5 mt-5">
+        <h3 className="font-bold text-lg">Trier par</h3>
+        <div className="bg-[var(--main-color)] flex justify-around w-44 text-lg text-white font-bold rounded-md p-2.5">
+            <h3>Popularité</h3>
+            <Image src="/dropdown.svg" width={15} height={15} alt=""/>
+        </div>
+       </section>
         <section className="flex flex-wrap justify-between">
           {medias.map((project, index) => {
             const col = index % 3;
@@ -39,7 +36,7 @@ const PageView = ({ photographer, medias }) => {
             return (
               <article key={index} className={`flex flex-col ${align} w-1/3`}>
                 <div className="relative h-75 w-87">
-                  <Image src={`/${project.image}`} fill alt="" className="object-cover rounded-[5px]"/>
+                  <Image src={`/${project.image}`} fill alt="" className="object-cover rounded-[5px]" />
                 </div>
                 <div className="flex justify-between w-87 pb-6 pt-2">
                   <h3 className="text-2xl text-[var(--main-color)]">{project.title}</h3>
