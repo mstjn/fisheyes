@@ -1,8 +1,10 @@
 "use client";
+import { useState } from "react";
 import Banner from "../components/banner";
 import Image from "next/image";
 const PageView = ({ photographer, medias }) => {
   console.log(medias);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -23,17 +25,19 @@ const PageView = ({ photographer, medias }) => {
             <Image src={`/${photographer.portrait}`} fill alt="" className="object-cover overflow-visible" />
           </div>
         </section>
-        <section className="flex gap-12 mb-5 mt-5">
+        <section className="flex mb-15 mt-5 relative">
           <h3 className="font-bold text-lg">Trier par</h3>
-          <div
-            className="bg-[var(--main-color)] text-lg text-white font-bold rounded-md p-5 shadow-xl/30"
-          >
+          <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer absolute left-30 z-1 bg-[var(--main-color)] text-lg text-white font-bold rounded-md p-5 shadow-xl/30">
             <div className="bg-[var(--main-color)] flex w-44 text-lg text-white font-bold rounded-md">
-              <h3 className="w-full pb-3">Popularité</h3>
-              <Image src="/dropdown-bottom.svg" width={15} height={15} alt="" className="pb-3"/>
+              <h3 className={isOpen ? "w-full pb-3" : "w-full"}>Popularité</h3>
+              <Image src={isOpen ? "/dropdown-bottom.svg" : "/dropdown.svg"} width={15} height={15} alt="" className={isOpen ? "pb-3" : ""} />
             </div>
-            <h3 className="pb-3 pt-3 border-b-1 w-full border-t-1">Date</h3>
-            <h3 className="pt-3">Titre</h3>
+            {isOpen && (
+              <>
+                <h3 className="pb-3 pt-3 border-b-1 w-full border-t-1">Date</h3>
+                <h3 className="pt-3">Titre</h3>
+              </>
+            )}
           </div>
         </section>
 
