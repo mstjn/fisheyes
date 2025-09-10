@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const PhotographerCard = ({ photographer }) => (
   <article className="flex flex-col items-center  w-1/3">
-    <Link href="#" className="flex flex-col items-center">
+    <Link href={`/${photographer.id}`} className="flex flex-col items-center">
       <div className="h-52 w-50 relative overflow-hidden rounded-full">
         <Image src={`/${photographer.portrait}`} fill alt="" className="object-cover overflow-visible" />
       </div>
