@@ -27,7 +27,10 @@ const PageView = ({ photographer, medias }) => {
         </section>
         <section className="flex mb-15 mt-5 relative">
           <h3 className="font-bold text-lg">Trier par</h3>
-          <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer absolute left-30 z-1 bg-[var(--main-color)] text-lg text-white font-bold rounded-md p-5 shadow-xl/30">
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="cursor-pointer absolute left-30 z-1 bg-[var(--main-color)] text-lg text-white font-bold rounded-md p-5 shadow-xl/30"
+          >
             <div className="bg-[var(--main-color)] flex w-44 text-lg text-white font-bold rounded-md">
               <h3 className={isOpen ? "w-full pb-3" : "w-full"}>Popularité</h3>
               <Image src={isOpen ? "/dropdown-bottom.svg" : "/dropdown.svg"} width={15} height={15} alt="" className={isOpen ? "pb-3" : ""} />
@@ -48,10 +51,10 @@ const PageView = ({ photographer, medias }) => {
 
             return (
               <article key={index} className={`flex flex-col ${align} w-1/3`}>
-                <div className="relative h-75 w-87">
+                <div className="relative h-75 w-[75%]">
                   <Image src={`/${project.image}`} fill alt="" className="object-cover rounded-[5px]" />
                 </div>
-                <div className="flex justify-between w-87 pb-6 pt-2">
+                <div className="flex justify-between w-[75%] pb-6 pt-2">
                   <h3 className="text-2xl text-[var(--main-color)]">{project.title}</h3>
                 </div>
               </article>
