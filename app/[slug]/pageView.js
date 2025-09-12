@@ -32,7 +32,7 @@ const PageView = ({ photographer, medias }) => {
           >
             Contactez-moi
           </button>
-          {showModal && createPortal(<ModalContact closeModal={() => setShowModal(false)}/>, document.body)}
+          {showModal && createPortal(<ModalContact closeModal={() => setShowModal(false)} name={photographer.name}/>, document.body)}
           <div className="relative rounded-full h-52 w-52 overflow-hidden">
             <Image src={`/${photographer.portrait}`} fill alt={`Portrait de ${photographer.name}`} className="object-cover overflow-visible" />
           </div>
