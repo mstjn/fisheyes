@@ -3,10 +3,13 @@ import { useState } from "react";
 import Banner from "../components/banner";
 import Image from "next/image";
 import Link from "next/link";
+import { createPortal } from "react-dom";
+import ModalContact from "../components/modalContact"
 
 const PageView = ({ photographer, medias }) => {
   console.log(medias);
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <>
@@ -23,11 +26,13 @@ const PageView = ({ photographer, medias }) => {
             <p className="text-lg text-[#525252]">{photographer.tagline}</p>
           </article>
           <button
+            onClick={() => setShowModal(true)}
             aria-label="Contact Me"
             className="h-16 p-2.5 bg-[var(--main-color)] rounded-md text-white text-lg font-bold hover:bg-[#DB8876] hover:text-black"
           >
             Contactez-moi
           </button>
+          {showModal && createPortal(<ModalContact closeModal={() => setShowModal(false)}/>, document.body)}
           <div className="relative rounded-full h-52 w-52 overflow-hidden">
             <Image src={`/${photographer.portrait}`} fill alt={`Portrait de ${photographer.name}`} className="object-cover overflow-visible" />
           </div>
@@ -80,20 +85,20 @@ const PageView = ({ photographer, medias }) => {
 
             return (
               <figure role="listitem" key={index} className={`flex flex-col ${align} w-1/3`}>
-                <div className="relative h-75 w-[95%]">
+  
                   {project.image ? (
-                    <Link href="#">
+                    <Link href="#" className="relative h-75 w-[95%]">
                       <Image src={`/${project.image}`} fill alt={`Image de ${project.title}`} className="object-cover rounded-[5px]" />
                     </Link>
                   ) : (
-                    <Link href="#">
+                    <Link href="#" className="relative h-75 w-[95%]">
                       <video src={`/${project.video}`}></video>
                     </Link>
                   )}
-                </div>
-                <div className="flex justify-between w-[95%] pb-6 pt-2">
-                  <figcaption className="text-2xl text-[var(--main-color)]">{project.title}</figcaption>
-                </div>
+                
+                <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
+                  <p className="text-2xl text-[var(--main-color)]">{project.title}</p>
+                </figcaption>
               </figure>
             );
           })}
