@@ -5,22 +5,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import ModalContact from "../../components/modalContact";
+import ModaleCarrousel from "@/app/components/modalCarrousel";
 import { useEffect } from "react";
 
 const PageView = ({ photographer, medias }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showCarrousel, setShowCarrousel] = useState(false)
+   const [selectedMedia, setSelectedMedia] = useState(null);
+
+  const openCarousel = (media) => {
+    setSelectedMedia(media);
+    setShowCarrousel(true);
+  };
 
   useEffect(() => {
     function handleEscape(event) {
       if (event.key === "Escape") {
         setShowModal(false); 
+        setShowCarrousel(false)
       }
     }
-    if (showModal) {
+    if (showModal || showCarrousel) {
       window.addEventListener("keydown", handleEscape);
     }
-    if (showModal) {
+    if (showModal || showCarrousel) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -29,7 +38,7 @@ const PageView = ({ photographer, medias }) => {
       window.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
     };
-  }, [showModal]);
+  }, [showModal, showCarrousel]);
 
   return (
     <>
@@ -99,6 +108,7 @@ const PageView = ({ photographer, medias }) => {
         </section>
 
         <section role="list" aria-label="Galerie des médias" className="flex flex-wrap ">
+           {showCarrousel && createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia}/>, document.body)}
           {medias.map((project, index) => {
             const col = index % 3;
             const align = col === 0 ? "items-start" : col === 1 ? "items-center" : "items-end";
@@ -106,9 +116,9 @@ const PageView = ({ photographer, medias }) => {
             return (
               <figure role="listitem" key={index} className={`flex flex-col ${align} w-1/3`}>
                 {project.image ? (
-                  <Link href="#" className="relative h-75 w-[95%]">
+                  <button onClick={() => openCarousel({type : "image" , src : `/${project.image}`, title : project.title})} className="relative h-75 w-[95%]">
                     <Image src={`/${project.image}`} fill alt={`Image de ${project.title}`} className="object-cover rounded-[5px]" />
-                  </Link>
+                  </button>
                 ) : (
                   <Link href="#" className="relative h-75 w-[95%]">
                     <video src={`/${project.video}`}></video>
