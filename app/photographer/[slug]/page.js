@@ -1,5 +1,5 @@
 import PageView from "./pageView";
-import { getPhotographer, getAllMediasForPhotographer } from "../lib/prisma-db";
+import { getPhotographer, getAllMediasForPhotographer } from "../../lib/prisma-db";
 
 const Page = async ({ params }) => {
   const p = await params;

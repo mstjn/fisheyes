@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import Banner from "../components/banner";
+import Banner from "../../components/banner";
 import Image from "next/image";
 import Link from "next/link";
 import { createPortal } from "react-dom";
-import ModalContact from "../components/modalContact";
+import ModalContact from "../../components/modalContact";
 import { useEffect } from "react";
 
 const PageView = ({ photographer, medias }) => {
