@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const Banner = ({page}) => (
-<header className="flex justify-between">
+const Banner = ({page, showModal}) => ( 
+<header className="flex justify-between"   {...(showModal ? { inert: true } : {})}>
     <Link href="/" className="h-12 relative w-52">
     <Image src="/logo.svg" fill alt="Fisheye Home Page" className="object-contain"/>
     </Link>

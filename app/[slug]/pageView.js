@@ -3,15 +3,38 @@ import { useState } from "react";
 import Banner from "../components/banner";
 import Image from "next/image";
 import Link from "next/link";
+import { createPortal } from "react-dom";
+import ModalContact from "../components/modalContact";
+import { useEffect } from "react";
 
 const PageView = ({ photographer, medias }) => {
-  console.log(medias);
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        setShowModal(false); 
+      }
+    }
+    if (showModal) {
+      window.addEventListener("keydown", handleEscape);
+    }
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [showModal]);
 
   return (
     <>
-      <Banner page={true} />
-      <main className="pl-24 pr-24">
+      <Banner page={true} showModal={showModal} />
+      <main className="pl-24 pr-24" aria-hidden={showModal ? "true" : "false"} {...(showModal ? { inert: true } : {})}>
         <section aria-labelledby="photographer-heading" className="flex justify-between items-center bg-[#FAFAFA] pl-10 pr-10 h-80">
           <article className="flex flex-col gap-5">
             <h1 id="photographer-heading" className="text-6xl text-[#D3573C]">
@@ -23,11 +46,13 @@ const PageView = ({ photographer, medias }) => {
             <p className="text-lg text-[#525252]">{photographer.tagline}</p>
           </article>
           <button
+            onClick={() => setShowModal(true)}
             aria-label="Contact Me"
             className="h-16 p-2.5 bg-[var(--main-color)] rounded-md text-white text-lg font-bold hover:bg-[#DB8876] hover:text-black"
           >
             Contactez-moi
           </button>
+          {showModal && createPortal(<ModalContact closeModal={() => setShowModal(false)} name={photographer.name} />, document.body)}
           <div className="relative rounded-full h-52 w-52 overflow-hidden">
             <Image src={`/${photographer.portrait}`} fill alt={`Portrait de ${photographer.name}`} className="object-cover overflow-visible" />
           </div>
@@ -63,10 +88,10 @@ const PageView = ({ photographer, medias }) => {
               aria-labelledby="sorting-heading"
               className={isOpen ? "shadow-xl absolute top-17 z-1 w-44 rounded-b-md bg-[var(--main-color)] pl-5 pr-2 pb-2" : "hidden"}
             >
-              <li role="option" tabIndex={-1} className="py-3 border-b border-t w-full text-left font-bold text-lg text-white">
+              <li role="option" tabIndex={0} className="py-3 border-b border-t w-full text-left font-bold text-lg text-white">
                 Date
               </li>
-              <li role="option" tabIndex={-1} className="pt-3 pb-3 w-full text-left font-bold text-lg text-white">
+              <li role="option" tabIndex={0} className="pt-3 pb-3 w-full text-left font-bold text-lg text-white">
                 Titre
               </li>
             </ul>
@@ -80,20 +105,19 @@ const PageView = ({ photographer, medias }) => {
 
             return (
               <figure role="listitem" key={index} className={`flex flex-col ${align} w-1/3`}>
-                <div className="relative h-75 w-[95%]">
-                  {project.image ? (
-                    <Link href="#">
-                      <Image src={`/${project.image}`} fill alt={`Image de ${project.title}`} className="object-cover rounded-[5px]" />
-                    </Link>
-                  ) : (
-                    <Link href="#">
-                      <video src={`/${project.video}`}></video>
-                    </Link>
-                  )}
-                </div>
-                <div className="flex justify-between w-[95%] pb-6 pt-2">
-                  <figcaption className="text-2xl text-[var(--main-color)]">{project.title}</figcaption>
-                </div>
+                {project.image ? (
+                  <Link href="#" className="relative h-75 w-[95%]">
+                    <Image src={`/${project.image}`} fill alt={`Image de ${project.title}`} className="object-cover rounded-[5px]" />
+                  </Link>
+                ) : (
+                  <Link href="#" className="relative h-75 w-[95%]">
+                    <video src={`/${project.video}`}></video>
+                  </Link>
+                )}
+
+                <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
+                  <p className="text-2xl text-[var(--main-color)]">{project.title}</p>
+                </figcaption>
               </figure>
             );
           })}
