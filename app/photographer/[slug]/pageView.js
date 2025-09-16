@@ -14,12 +14,6 @@ const PageView = ({ photographer, medias }) => {
   const [showCarrousel, setShowCarrousel] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
 
-  const photos = medias.map(media => ({
-  id: media.id,
-  src: media.image,
-  title: media.title,
-}));
-
   const openCarousel = (media) => {
     setSelectedMedia(media);
     setShowCarrousel(true);
@@ -115,7 +109,7 @@ const PageView = ({ photographer, medias }) => {
 
         <section role="list" aria-label="Galerie des médias" className="flex flex-wrap ">
           {showCarrousel &&
-            createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia} photos={photos} />, document.body)}
+            createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia} medias={medias} />, document.body)}
           {medias.map((project, index) => {
             const col = index % 3;
             const align = col === 0 ? "items-start" : col === 1 ? "items-center" : "items-end";
@@ -123,13 +117,19 @@ const PageView = ({ photographer, medias }) => {
             return (
               <figure role="listitem" key={index} className={`flex flex-col ${align} w-1/3`}>
                 {project.image ? (
-                  <button onClick={() => openCarousel({ type: "image", src: project.image, title: project.title })} className="relative h-75 w-[95%]">
+                  <button
+                    onClick={() => openCarousel({ id: project.id, image: project.image, video: project.video, title: project.title })}
+                    className="relative h-75 w-[95%]"
+                  >
                     <Image src={`/${project.image}`} fill alt={`Image de ${project.title}`} className="object-cover rounded-[5px]" />
                   </button>
                 ) : (
-                  <Link href="#" className="relative h-75 w-[95%]">
-                    <video src={`/${project.video}`}></video>
-                  </Link>
+                  <button
+                    onClick={() => openCarousel({ id: project.id, image: project.image, video: project.video, title: project.title })}
+                    className="relative h-75 w-[95%]"
+                  >
+                    <video className="absolute inset-0 object-cover h-full w-full rounded-[5px]" src={`/${project.video}`}></video>
+                  </button>
                 )}
 
                 <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
