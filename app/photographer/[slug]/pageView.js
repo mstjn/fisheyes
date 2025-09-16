@@ -8,29 +8,31 @@ import ModalContact from "../../components/modalContact";
 import ModaleCarrousel from "@/app/components/modalCarrousel";
 import { useEffect, useRef } from "react";
 
-const PageView = ({ photographer, medias, updateLikes}) => {
+const PageView = ({ photographer, medias, updateLikes }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showCarrousel, setShowCarrousel] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [items, setItems] = useState(medias);
+  const [likes, setLikes] = useState();
 
-  const onLike = async (id,nb) => {
-    
+  useEffect(() => {
+    const total = items.reduce((acc, it) => acc + (it.likes || 0), 0);
+    setLikes(total);
+  }, [items]);
+
+  const onLike = async (id, nb) => {
     const prev = items;
-   
-    setItems((cur) => cur.map(m => m.id === id ? { ...m, likes: m.likes + 1 } : m));
+
+    setItems((cur) => cur.map((m) => (m.id === id ? { ...m, likes: m.likes + 1 } : m)));
 
     try {
-      await updateLikes(id, nb+1); 
+      await updateLikes(id, nb + 1);
     } catch (e) {
       setItems(prev);
       console.error(e);
     }
   };
-
-  console.log(medias);
-  
 
   const openCarousel = (media) => {
     setSelectedMedia(media);
@@ -128,6 +130,12 @@ const PageView = ({ photographer, medias, updateLikes}) => {
         <section role="list" aria-label="Galerie des médias" className="flex flex-wrap ">
           {showCarrousel &&
             createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia} medias={medias} />, document.body)}
+          <aside className="bg-[#DB8876] z-10 w-96 h-20 fixed bottom-0 right-8 rounded-t flex justify-between items-center p-5 text-2xl font-medium">
+            <div className="flex gap-2">
+              <p>{likes}</p> <Image src="/black-heart.svg" width={20} height={20} alt="" aria-hidden="true" />
+            </div>
+            <p>{photographer.price}€ / jour</p>
+          </aside>
           {items.map((project, index) => {
             const col = index % 3;
             const align = col === 0 ? "items-start" : col === 1 ? "items-center" : "items-end";
@@ -152,7 +160,7 @@ const PageView = ({ photographer, medias, updateLikes}) => {
 
                 <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
                   <p className="text-2xl text-[var(--main-color)]">{project.title}</p>
-                  <button className="flex gap-2 items-center"  onClick={() => onLike(project.id, project.likes)}>
+                  <button className="flex gap-2 items-center" onClick={() => onLike(project.id, project.likes)}>
                     <p className="text-[var(--main-color)] font-medium text-2xl ">{project.likes}</p>
                     <Image src="/heart.svg" width={20} height={20} alt="" aria-hidden="true" />
                   </button>
