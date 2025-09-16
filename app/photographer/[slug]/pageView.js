@@ -6,13 +6,31 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import ModalContact from "../../components/modalContact";
 import ModaleCarrousel from "@/app/components/modalCarrousel";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-const PageView = ({ photographer, medias }) => {
+const PageView = ({ photographer, medias, updateLikes}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showCarrousel, setShowCarrousel] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [items, setItems] = useState(medias);
+
+  const onLike = async (id,nb) => {
+    
+    const prev = items;
+   
+    setItems((cur) => cur.map(m => m.id === id ? { ...m, likes: m.likes + 1 } : m));
+
+    try {
+      await updateLikes(id, nb+1); 
+    } catch (e) {
+      setItems(prev);
+      console.error(e);
+    }
+  };
+
+  console.log(medias);
+  
 
   const openCarousel = (media) => {
     setSelectedMedia(media);
@@ -43,7 +61,7 @@ const PageView = ({ photographer, medias }) => {
   return (
     <>
       <Banner page={true} showCarrousel={showCarrousel} showModal={showModal} />
-      <main className="pl-24 pr-24" aria-hidden={showModal ? "true" : "false"} {...(showModal||showCarrousel ? { inert: true } : {})}>
+      <main className="pl-24 pr-24" aria-hidden={showModal ? "true" : "false"} {...(showModal || showCarrousel ? { inert: true } : {})}>
         <section aria-labelledby="photographer-heading" className="flex justify-between items-center bg-[#FAFAFA] pl-10 pr-10 h-80">
           <article className="flex flex-col gap-5">
             <h1 id="photographer-heading" className="text-6xl text-[#D3573C]">
@@ -110,7 +128,7 @@ const PageView = ({ photographer, medias }) => {
         <section role="list" aria-label="Galerie des médias" className="flex flex-wrap ">
           {showCarrousel &&
             createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia} medias={medias} />, document.body)}
-          {medias.map((project, index) => {
+          {items.map((project, index) => {
             const col = index % 3;
             const align = col === 0 ? "items-start" : col === 1 ? "items-center" : "items-end";
 
@@ -134,6 +152,10 @@ const PageView = ({ photographer, medias }) => {
 
                 <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
                   <p className="text-2xl text-[var(--main-color)]">{project.title}</p>
+                  <button className="flex gap-2 items-center"  onClick={() => onLike(project.id, project.likes)}>
+                    <p className="text-[var(--main-color)] font-medium text-2xl ">{project.likes}</p>
+                    <Image src="/heart.svg" width={20} height={20} alt="" aria-hidden="true" />
+                  </button>
                 </figcaption>
               </figure>
             );
