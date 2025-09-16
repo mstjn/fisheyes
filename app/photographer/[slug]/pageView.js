@@ -9,13 +9,37 @@ import ModaleCarrousel from "@/app/components/modalCarrousel";
 import { useEffect, useRef } from "react";
 
 const PageView = ({ photographer, medias, updateLikes }) => {
+ 
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showCarrousel, setShowCarrousel] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [items, setItems] = useState(medias);
   const [likes, setLikes] = useState();
+  const [selected, setSelected] = useState("Date"); 
 
+  const sortByDate = () => {
+    const datedItems = [...items].sort((a, b) => new Date(a.date) - new Date(b.date));
+    setItems(datedItems);
+    setSelected("Date");
+    setIsOpen(false)
+  };
+
+  const sortByTitle = () => {
+    const titledItems = [...items].sort((a, b) => a.title.localeCompare(b.title));
+    setItems(titledItems);
+    setSelected("Titre");
+    setIsOpen(false)
+  };
+
+  const sortByLikes = () => {
+    const likedItems = [...items].sort((a, b) => b.likes - a.likes);
+    setItems(likedItems);
+    setSelected("Popularité");
+    setIsOpen(false)
+  };
+
+  const options = ["Popularité", "Date", "Titre"];
   useEffect(() => {
     const total = items.reduce((acc, it) => acc + (it.likes || 0), 0);
     setLikes(total);
@@ -107,7 +131,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
               onClick={() => setIsOpen(!isOpen)}
             >
               <span id="sort-button-label" className="truncate">
-                Popularité
+                {selected}
               </span>
               <img src={isOpen ? "/dropdown-bottom.svg" : "/dropdown.svg"} width="15" height="15" alt="" aria-hidden="true" />
             </button>
@@ -117,12 +141,25 @@ const PageView = ({ photographer, medias, updateLikes }) => {
               aria-labelledby="sorting-heading"
               className={isOpen ? "shadow-xl absolute top-17 z-1 w-44 rounded-b-md bg-[var(--main-color)] pl-5 pr-2 pb-2" : "hidden"}
             >
-              <li role="option" tabIndex={0} className="py-3 border-b border-t w-full text-left font-bold text-lg text-white">
-                Date
-              </li>
-              <li role="option" tabIndex={0} className="pt-3 pb-3 w-full text-left font-bold text-lg text-white">
-                Titre
-              </li>
+             {options
+          .filter((opt) => opt !== selected) // cache l’option déjà sélectionnée
+          .map((opt) => (
+            <li
+              key={opt}
+              role="option"
+              tabIndex={0}
+              onClick={
+                opt === "Date"
+                  ? sortByDate
+                  : opt === "Titre"
+                  ? sortByTitle
+                  : sortByLikes
+              }
+              className="py-3 border-t  w-full text-left font-bold text-lg text-white"
+            >
+              {opt}
+            </li>
+          ))}
             </ul>
           </div>
         </section>
