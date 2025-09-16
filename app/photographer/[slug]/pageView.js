@@ -11,8 +11,14 @@ import { useEffect } from "react";
 const PageView = ({ photographer, medias }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showCarrousel, setShowCarrousel] = useState(false)
-   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [showCarrousel, setShowCarrousel] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+
+  const photos = medias.map(media => ({
+  id: media.id,
+  src: media.image,
+  title: media.title,
+}));
 
   const openCarousel = (media) => {
     setSelectedMedia(media);
@@ -22,8 +28,8 @@ const PageView = ({ photographer, medias }) => {
   useEffect(() => {
     function handleEscape(event) {
       if (event.key === "Escape") {
-        setShowModal(false); 
-        setShowCarrousel(false)
+        setShowModal(false);
+        setShowCarrousel(false);
       }
     }
     if (showModal || showCarrousel) {
@@ -108,7 +114,8 @@ const PageView = ({ photographer, medias }) => {
         </section>
 
         <section role="list" aria-label="Galerie des médias" className="flex flex-wrap ">
-           {showCarrousel && createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia}/>, document.body)}
+          {showCarrousel &&
+            createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia} photos={photos} />, document.body)}
           {medias.map((project, index) => {
             const col = index % 3;
             const align = col === 0 ? "items-start" : col === 1 ? "items-center" : "items-end";
@@ -116,7 +123,7 @@ const PageView = ({ photographer, medias }) => {
             return (
               <figure role="listitem" key={index} className={`flex flex-col ${align} w-1/3`}>
                 {project.image ? (
-                  <button onClick={() => openCarousel({type : "image" , src : `/${project.image}`, title : project.title})} className="relative h-75 w-[95%]">
+                  <button onClick={() => openCarousel({ type: "image", src: project.image, title: project.title })} className="relative h-75 w-[95%]">
                     <Image src={`/${project.image}`} fill alt={`Image de ${project.title}`} className="object-cover rounded-[5px]" />
                   </button>
                 ) : (
