@@ -42,8 +42,8 @@ const PageView = ({ photographer, medias }) => {
 
   return (
     <>
-      <Banner page={true} showModal={showModal} />
-      <main className="pl-24 pr-24" aria-hidden={showModal ? "true" : "false"} {...(showModal ? { inert: true } : {})}>
+      <Banner page={true} showCarrousel={showCarrousel} showModal={showModal} />
+      <main className="pl-24 pr-24" aria-hidden={showModal ? "true" : "false"} {...(showModal||showCarrousel ? { inert: true } : {})}>
         <section aria-labelledby="photographer-heading" className="flex justify-between items-center bg-[#FAFAFA] pl-10 pr-10 h-80">
           <article className="flex flex-col gap-5">
             <h1 id="photographer-heading" className="text-6xl text-[#D3573C]">
