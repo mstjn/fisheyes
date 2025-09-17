@@ -1,42 +1,40 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Banner from "../../components/banner";
 import Image from "next/image";
-import Link from "next/link";
 import { createPortal } from "react-dom";
 import ModalContact from "../../components/modalContact";
 import ModaleCarrousel from "@/app/components/modalCarrousel";
-import { useEffect, useRef } from "react";
 
 const PageView = ({ photographer, medias, updateLikes }) => {
- 
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showCarrousel, setShowCarrousel] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [items, setItems] = useState(medias);
   const [likes, setLikes] = useState();
-  const [selected, setSelected] = useState("Date"); 
+  const [selected, setSelected] = useState("Date");
 
+  // sorting functions
   const sortByDate = () => {
     const datedItems = [...items].sort((a, b) => new Date(a.date) - new Date(b.date));
     setItems(datedItems);
     setSelected("Date");
-    setIsOpen(false)
+    setIsOpen(false);
   };
 
   const sortByTitle = () => {
     const titledItems = [...items].sort((a, b) => a.title.localeCompare(b.title));
     setItems(titledItems);
     setSelected("Titre");
-    setIsOpen(false)
+    setIsOpen(false);
   };
 
   const sortByLikes = () => {
     const likedItems = [...items].sort((a, b) => b.likes - a.likes);
     setItems(likedItems);
     setSelected("Popularité");
-    setIsOpen(false)
+    setIsOpen(false);
   };
 
   const options = ["Popularité", "Date", "Titre"];
@@ -45,6 +43,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
     setLikes(total);
   }, [items]);
 
+  // liked function
   const onLike = async (id, nb) => {
     const prev = items;
 
@@ -63,6 +62,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
     setShowCarrousel(true);
   };
 
+  // modal gestion
   useEffect(() => {
     function handleEscape(event) {
       if (event.key === "Escape") {
@@ -93,12 +93,13 @@ const PageView = ({ photographer, medias, updateLikes }) => {
             <h1 id="photographer-heading" className="text-6xl text-[#D3573C]">
               {photographer.name}
             </h1>
-            <p className="text-2xl text-[var(--main-color)]">
+            <h2 className="text-2xl text-[var(--main-color)]">
               {photographer.city}, {photographer.country}
-            </p>
+            </h2>
             <p className="text-lg text-[#525252]">{photographer.tagline}</p>
           </article>
           <button
+            type="button"
             onClick={() => setShowModal(true)}
             aria-label="Contact Me"
             className="h-16 p-2.5 bg-[var(--main-color)] rounded-md text-white text-lg font-bold hover:bg-[#DB8876] hover:text-black"
@@ -115,13 +116,14 @@ const PageView = ({ photographer, medias, updateLikes }) => {
             Trier par
           </h3>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col cursor-pointer">
             <button
               onMouseDown={(e) => e.preventDefault()}
               id="sort-button"
               type="button"
               aria-expanded={isOpen}
               aria-haspopup="listbox"
+              aria-controls="sort-popup"
               aria-labelledby="sorting-heading sort-button-label"
               className={
                 isOpen
@@ -141,25 +143,30 @@ const PageView = ({ photographer, medias, updateLikes }) => {
               aria-labelledby="sorting-heading"
               className={isOpen ? "shadow-xl absolute top-17 z-1 w-44 rounded-b-md bg-[var(--main-color)] pl-5 pr-2 pb-2" : "hidden"}
             >
-             {options
-          .filter((opt) => opt !== selected) // cache l’option déjà sélectionnée
-          .map((opt) => (
-            <li
-              key={opt}
-              role="option"
-              tabIndex={0}
-              onClick={
-                opt === "Date"
-                  ? sortByDate
-                  : opt === "Titre"
-                  ? sortByTitle
-                  : sortByLikes
-              }
-              className="py-3 border-t  w-full text-left font-bold text-lg text-white"
-            >
-              {opt}
-            </li>
-          ))}
+              {options
+                .filter((opt) => opt !== selected) // cache l’option déjà sélectionnée
+                .map((opt) => {
+                  const handleAction = opt === "Date" ? sortByDate : opt === "Titre" ? sortByTitle : sortByLikes;
+                  return (
+                    <li
+                      key={opt}
+                      aria-selected={selected === opt}
+                      role="option"
+                      aria-labelledby="sorting-heading"
+                      tabIndex={0}
+                      onClick={handleAction}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleAction();
+                        }
+                      }}
+                      className="py-3 border-t  w-full text-left font-bold text-lg text-white"
+                    >
+                      {opt}
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         </section>
@@ -167,9 +174,12 @@ const PageView = ({ photographer, medias, updateLikes }) => {
         <section role="list" aria-label="Galerie des médias" className="flex flex-wrap ">
           {showCarrousel &&
             createPortal(<ModaleCarrousel closeModal={() => setShowCarrousel(false)} media={selectedMedia} medias={medias} />, document.body)}
-          <aside className="bg-[#DB8876] z-10 w-96 h-20 fixed bottom-0 right-8 rounded-t flex justify-between items-center p-5 text-2xl font-medium">
+          <aside
+            role="region"
+            className="bg-[#DB8876] z-10 w-96 h-20 fixed bottom-0 right-8 rounded-t flex justify-between items-center p-5 text-2xl font-medium"
+          >
             <div className="flex gap-2">
-              <p>{likes}</p> <Image src="/black-heart.svg" width={20} height={20} alt="" aria-hidden="true" />
+              <p aria-live="polite">{likes}</p> <Image src="/black-heart.svg" width={20} height={20} alt="" aria-hidden="true" />
             </div>
             <p>{photographer.price}€ / jour</p>
           </aside>
@@ -181,6 +191,8 @@ const PageView = ({ photographer, medias, updateLikes }) => {
               <figure role="listitem" key={index} className={`flex flex-col ${align} w-1/3`}>
                 {project.image ? (
                   <button
+                    type="button"
+                    aria-label={`Ouvrir l’image : ${project.title}`}
                     onClick={() => openCarousel({ id: project.id, image: project.image, video: project.video, title: project.title })}
                     className="relative h-75 w-[95%]"
                   >
@@ -188,17 +200,25 @@ const PageView = ({ photographer, medias, updateLikes }) => {
                   </button>
                 ) : (
                   <button
+                    type="button"
+                    aria-label={`Lire la vidéo : ${project.title}`}
                     onClick={() => openCarousel({ id: project.id, image: project.image, video: project.video, title: project.title })}
                     className="relative h-75 w-[95%]"
                   >
-                    <video className="absolute inset-0 object-cover h-full w-full rounded-[5px]" src={`/${project.video}`}></video>
+                    <video
+                      className="absolute inset-0 object-cover h-full w-full rounded-[5px]"
+                      src={`/${project.video}`}
+                      tabIndex={-1}
+                      aria-hidden="true"
+                      preload="metadata"
+                    ></video>
                   </button>
                 )}
 
                 <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
-                  <p className="text-2xl text-[var(--main-color)]">{project.title}</p>
-                  <button className="flex gap-2 items-center" onClick={() => onLike(project.id, project.likes)}>
-                    <p className="text-[var(--main-color)] font-medium text-2xl ">{project.likes}</p>
+                  <h3 className="text-2xl text-[var(--main-color)]">{project.title}</h3>
+                  <button type="button" className="flex gap-2 items-center" onClick={() => onLike(project.id, project.likes)}>
+                    <h4 className="text-[var(--main-color)] font-medium text-2xl ">{project.likes}</h4>
                     <Image src="/heart.svg" width={20} height={20} alt="" aria-hidden="true" />
                   </button>
                 </figcaption>

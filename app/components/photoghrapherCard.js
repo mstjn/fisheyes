@@ -5,7 +5,7 @@ const PhotographerCard = ({ photographer }) => (
   <article className="flex flex-col items-center  w-1/3">
     <Link href={`/photographer/${photographer.id}`} className="flex flex-col items-center">
       <div className="h-52 w-50 relative overflow-hidden rounded-full">
-        <Image src={`/${photographer.portrait}`} fill alt="" className="object-cover overflow-visible" />
+        <Image src={`/${photographer.portrait}`} fill alt="" aria-hidden="true" className="object-cover overflow-visible" />
       </div>
       <h2>{photographer.name}</h2>
     </Link>
