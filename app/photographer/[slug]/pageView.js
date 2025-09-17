@@ -118,6 +118,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
 
           <div className="flex flex-col cursor-pointer">
             <button
+              onKeyDown={(e) => e.preventDefault()}
               onMouseDown={(e) => e.preventDefault()}
               id="sort-button"
               type="button"
@@ -135,7 +136,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
               <span id="sort-button-label" className="truncate">
                 {selected}
               </span>
-              <img src={isOpen ? "/dropdown-bottom.svg" : "/dropdown.svg"} width="15" height="15" alt="" aria-hidden="true" />
+              <img src={isOpen ? "/dropdown-bottom.svg" : "/dropdown.svg"} width="15" height="15" aria-hidden="true" alt=""/>
             </button>
 
             <ul
