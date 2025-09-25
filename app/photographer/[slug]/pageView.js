@@ -93,9 +93,9 @@ const PageView = ({ photographer, medias, updateLikes }) => {
             <h1 id="photographer-heading" className="text-6xl text-[#D3573C]">
               {photographer.name}
             </h1>
-            <h2 className="text-2xl text-[var(--main-color)]">
+            <p className="text-2xl text-[var(--main-color)]">
               {photographer.city}, {photographer.country}
-            </h2>
+            </p>
             <p className="text-lg text-[#525252]">{photographer.tagline}</p>
           </article>
           <button
@@ -112,13 +112,12 @@ const PageView = ({ photographer, medias, updateLikes }) => {
           </div>
         </section>
         <section aria-labelledby="sorting-heading" className="flex mb-10 mt-5 gap-5 relative">
-          <h3 id="sorting-heading" className="font-bold text-lg">
+          <label id="sorting-heading" className="font-bold text-lg">
             Trier par
-          </h3>
+          </label>
 
           <div className="flex flex-col cursor-pointer">
             <button
-              onKeyDown={(e) => e.preventDefault()}
               onMouseDown={(e) => e.preventDefault()}
               id="sort-button"
               type="button"
@@ -140,6 +139,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
             </button>
 
             <ul
+              role="listbox"
               id="sort-popup"
               aria-labelledby="sorting-heading"
               className={isOpen ? "shadow-xl absolute top-17 z-1 w-44 rounded-b-md bg-[var(--main-color)] pl-5 pr-2 pb-2" : "hidden"}
@@ -180,7 +180,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
             className="bg-[#DB8876] z-10 w-96 h-20 fixed bottom-0 right-8 rounded-t flex justify-between items-center p-5 text-2xl font-medium"
           >
             <div className="flex gap-2">
-              <p aria-live="polite">{likes}</p> <Image src="/black-heart.svg" width={20} height={20} alt="" aria-hidden="true" />
+              <p>{likes}</p> <Image src="/black-heart.svg" width={20} height={20} alt="" aria-hidden="true" />
             </div>
             <p>{photographer.price}€ / jour</p>
           </aside>
@@ -193,7 +193,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
                 {project.image ? (
                   <button
                     type="button"
-                    aria-label={`Ouvrir l’image : ${project.title}`}
+                    aria-label={`${project.title}`}
                     onClick={() => openCarousel({ id: project.id, image: project.image, video: project.video, title: project.title })}
                     className="relative h-75 w-[95%]"
                   >
@@ -202,7 +202,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
                 ) : (
                   <button
                     type="button"
-                    aria-label={`Lire la vidéo : ${project.title}`}
+                    aria-label={`${project.title}`}
                     onClick={() => openCarousel({ id: project.id, image: project.image, video: project.video, title: project.title })}
                     className="relative h-75 w-[95%]"
                   >
@@ -217,9 +217,9 @@ const PageView = ({ photographer, medias, updateLikes }) => {
                 )}
 
                 <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
-                  <h3 className="text-2xl text-[var(--main-color)]">{project.title}</h3>
+                  <p className="text-2xl text-[var(--main-color)]">{project.title}</p>
                   <button type="button" className="flex gap-2 items-center" onClick={() => onLike(project.id, project.likes)}>
-                    <h4 className="text-[var(--main-color)] font-medium text-2xl ">{project.likes}</h4>
+                    <p className="text-[var(--main-color)] font-medium text-2xl" aria-label="likes">{project.likes}</p>
                     <Image src="/heart.svg" width={20} height={20} alt="" aria-hidden="true" />
                   </button>
                 </figcaption>
