@@ -124,12 +124,8 @@ const PageView = ({ photographer, medias, updateLikes }) => {
               aria-expanded={isOpen}
               aria-haspopup="listbox"
               aria-controls="sort-popup"
-              aria-labelledby="sorting-heading sort-button-label"
-              className={
-                isOpen
-                  ? "flex items-center justify-between w-44 rounded-t-md p-5 font-bold text-lg text-white bg-[var(--main-color)]"
-                  : "flex items-center justify-between w-44 rounded-md p-5 font-bold text-lg text-white bg-[var(--main-color)]"
-              }
+              aria-labelledby="sort-button-label"
+              className={`flex items-center justify-between w-44 ${isOpen ? "rounded-t-md" : "rounded-md"} p-5 font-bold text-lg text-white bg-[var(--main-color)]`}
               onClick={() => setIsOpen(!isOpen)}
             >
               <span id="sort-button-label" className="truncate">
@@ -145,7 +141,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
               className={isOpen ? "shadow-xl absolute top-17 z-1 w-44 rounded-b-md bg-[var(--main-color)] pl-5 pr-2 pb-2" : "hidden"}
             >
               {options
-                .filter((opt) => opt !== selected) // cache l’option déjà sélectionnée
+                .filter((opt) => opt !== selected) 
                 .map((opt) => {
                   const handleAction = opt === "Date" ? sortByDate : opt === "Titre" ? sortByTitle : sortByLikes;
                   return (
@@ -153,7 +149,7 @@ const PageView = ({ photographer, medias, updateLikes }) => {
                       key={opt}
                       aria-selected={selected === opt}
                       role="option"
-                      aria-labelledby="sorting-heading"
+                      aria-label={`Trier par ${opt}`}
                       tabIndex={0}
                       onClick={handleAction}
                       onKeyDown={(e) => {
@@ -218,8 +214,8 @@ const PageView = ({ photographer, medias, updateLikes }) => {
 
                 <figcaption className="flex justify-between w-[95%] pb-6 pt-2">
                   <p className="text-2xl text-[var(--main-color)]">{project.title}</p>
-                  <button type="button" className="flex gap-2 items-center" onClick={() => onLike(project.id, project.likes)}>
-                    <p className="text-[var(--main-color)] font-medium text-2xl" aria-label="likes">{project.likes}</p>
+                  <button type="button" className="flex gap-2 items-center" aria-label={`appuyer pour aimer, actuellement ${project.likes} likes`} onClick={() => onLike(project.id, project.likes)}>
+                    <p className="text-[var(--main-color)] font-medium text-2xl" >{project.likes}</p>
                     <Image src="/heart.svg" width={20} height={20} alt="" aria-hidden="true" />
                   </button>
                 </figcaption>

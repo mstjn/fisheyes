@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const PhotographerCard = ({ photographer }) => (
   <article className="flex flex-col items-center  w-1/3">
-    <Link href={`/photographer/${photographer.id}`} className="flex flex-col items-center">
+    <Link href={`/photographer/${photographer.id}`} className="flex flex-col items-center" aria-label={`Voir le profil de ${photographer.name}`}>
       <div className="h-52 w-50 relative overflow-hidden rounded-full">
         <Image src={`/${photographer.portrait}`} fill alt="" aria-hidden="true" className="object-cover overflow-visible" />
       </div>
